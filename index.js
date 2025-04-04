@@ -1,15 +1,16 @@
-const express = require('express');
-const { resolve } = require('path');
-
+require("dotenv").config({ path: "./config/.env" });
+const express = require("express");
 const app = express();
-const port = 3010;
+const router = require("./router/routes");
+const connectDB = require("./db/db");
 
-app.use(express.static('static'));
+app.use(express.json());
+app.use("/", router);
 
-app.get('/', (req, res) => {
-  res.sendFile(resolve(__dirname, 'pages/index.html'));
-});
-
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
+connectDB().then(() => {
+  app.listen(process.env.PORT, () => {
+    console.log(
+      `Server is running on port http://localhost:${process.env.PORT}`
+    );
+  });
 });
